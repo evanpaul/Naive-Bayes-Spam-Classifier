@@ -117,7 +117,8 @@ if __name__ == "__main__":
     print "Filtering results..."
     remove_stop_words(ham_counts, spam_counts, master_word_dict)
     remove_insignificant(master_word_dict)
-    remove_ambiguous(ham_counts, spam_counts, master_word_dict)
+    # remove_ambiguous(ham_counts, spam_counts, master_word_dict)
+
 
     # Write results to files
     s_file = "spam_output.csv"
