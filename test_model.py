@@ -1,8 +1,8 @@
 import csv
 import numpy as np
 import pandas as pd
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.feature_selection import mutual_info_classif
+from sklearn.naive_bayes import MultinomialNB, GaussianNB, BernoulliNB
+from sklearn.feature_selection import mutual_info_classif, SelectKBest
 import os.path
 
 def predict(data, model, spam_flag):
@@ -45,7 +45,10 @@ def test_model(ham, spam, model):
 
 
 if __name__ == "__main__":
-    NB_model = MultinomialNB()
+    MNB = MultinomialNB()
+    GNB = GaussianNB()
+    BNB = BernoulliNB()
+
 
     print "Loading CSVs..."
     # Pandas is super efficient at loading CSVs
@@ -60,29 +63,29 @@ if __name__ == "__main__":
     spam_label = np.ones(shape=len(spam_data))
 
     # Mutual information feature filtering
-    feature_path = "features_score.npy"
-    if False:#os.path.isfile(feature_path):
-        print "Loading features' mutal information score from %s" % feature_path
+    # feature_path = "features_score.npy"
+    # if False:#os.path.isfile(feature_path):
+    #     print "Loading features' mutal information score from %s" % feature_path
+    #
+    #     MI = np.load(feature_path).tolist()
+    #
+    # else:
 
-        MI = np.load(feature_path).tolist()
-
-    else:
-        print "Testing features' mutual information score..."
-        MI = mutual_info_classif(np.concatenate((ham_data, spam_data)),
-            np.concatenate((ham_label, spam_label)))
+        # MI = mutual_info_classif(np.concatenate((ham_data, spam_data)),
+        #     np.concatenate((ham_label, spam_label)))
 
         # np.save(feature_path, MI)
-    print "Removing columns with low mutual information scores"
-    drop_col = 0
-    for n in MI:
-        if n == 0:
-            # Remove useless columns from data
-            spam_data = np.delete(spam_data, [drop_col], axis=1)
-            ham_data = np.delete(ham_data, [drop_col], axis=1)
-        drop_col += 1
+    # print "Removing columns with low mutual information scores"
+    # drop_col = 0
+    # for n in MI:
+    #     if n == 0:
+    #         # Remove useless columns from data
+    #         spam_data = np.delete(spam_data, [drop_col], axis=1)
+    #         ham_data = np.delete(ham_data, [drop_col], axis=1)
+    #     drop_col += 1
 
 
-    print "Number of features after mutual information score filtering:", len(spam_data)
+    # print "Number of features after mutual information score filtering:", len(spam_data)
 
     # Partition into training and testing data
     training_spam = spam_data[:int(.8 * len(spam_data))]
@@ -90,11 +93,45 @@ if __name__ == "__main__":
     testing_spam = spam_data[int(.8 * len(spam_data)):]
     testing_ham = ham_data[int(.8 * len(ham_data)):]
 
+    print "Selecting features based on mutual information score..."
+    print "In =", len(training_ham[0])
+    sel = SelectKBest(score_func=mutual_info_classif, k=3000)
+    x = np.concatenate((training_ham, training_spam))
+    y = np.concatenate((ham_label[:len(training_ham)], spam_label[:len(training_spam)]))
+    sel = sel.fit(x, y)
+
+    features = sel.get_support()
+    bad_features = []
+    for i in range(len(features)):
+        if not features[i]:
+            bad_features.append(i)
+
+    # Delete less useful features
+    np.delete(training_spam, bad_features, axis=1)
+    np.delete(training_ham, bad_features, axis=1)
+    np.delete(testing_spam, bad_features, axis=1)
+    np.delete(testing_ham, bad_features, axis=1)
+
+
+    print "Out =", len(training_ham[0])
+
+
+
     print "Analyzing data..."
     combined_training_data = np.concatenate((training_ham, training_spam))
     combined_training_labels = np.concatenate(
         (ham_label[:len(training_ham)], spam_label[:len(training_spam)]))
-    NB_model = NB_model.fit(combined_training_data, combined_training_labels)
 
-    test_model(training_ham, training_spam, NB_model)
-    test_model(testing_ham, testing_spam, NB_model)
+    # MultinomialNB
+    print "==== MULTINOMIAL NAIVE BAYES ===="
+    MNB = MNB.fit(combined_training_data, combined_training_labels)
+    test_model(training_ham, training_spam, MNB)
+    test_model(testing_ham, testing_spam, MNB)
+    print "==== GAUSSIAN NAIVE BAYES ===="
+    GNB = GNB.fit(combined_training_data, combined_training_labels)
+    test_model(training_ham, training_spam, GNB)
+    test_model(testing_ham, testing_spam, GNB)
+    print "==== BERNOULLI NAIVE BAYES ===="
+    BNB = BNB.fit(combined_training_data, combined_training_labels)
+    test_model(training_ham, training_spam, BNB)
+    test_model(testing_ham, testing_spam, BNB)
