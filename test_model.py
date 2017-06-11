@@ -94,7 +94,7 @@ if __name__ == "__main__":
     testing_ham = ham_data[int(.8 * len(ham_data)):]
 
     print "Selecting features based on mutual information score..."
-    print "In =", len(training_ham[0])
+    print "# features BEFORE filter =", len(training_ham[0])
     sel = SelectKBest(score_func=mutual_info_classif, k=3000)
     x = np.concatenate((training_ham, training_spam))
     y = np.concatenate((ham_label[:len(training_ham)], spam_label[:len(training_spam)]))
@@ -107,31 +107,31 @@ if __name__ == "__main__":
             bad_features.append(i)
 
     # Delete less useful features
-    np.delete(training_spam, bad_features, axis=1)
-    np.delete(training_ham, bad_features, axis=1)
-    np.delete(testing_spam, bad_features, axis=1)
-    np.delete(testing_ham, bad_features, axis=1)
+    training_spam = np.delete(training_spam, bad_features, axis=1)
+    training_ham = np.delete(training_ham, bad_features, axis=1)
+    testing_spam = np.delete(testing_spam, bad_features, axis=1)
+    testing_ham = np.delete(testing_ham, bad_features, axis=1)
 
 
-    print "Out =", len(training_ham[0])
+    print "# features AFTER  filter =", len(training_ham[0])
 
 
 
-    print "Analyzing data..."
+    print "Classifying data..."
     combined_training_data = np.concatenate((training_ham, training_spam))
     combined_training_labels = np.concatenate(
         (ham_label[:len(training_ham)], spam_label[:len(training_spam)]))
 
     # MultinomialNB
-    print "==== MULTINOMIAL NAIVE BAYES ===="
+    print "MULTINOMIAL NAIVE BAYES"
     MNB = MNB.fit(combined_training_data, combined_training_labels)
     test_model(training_ham, training_spam, MNB)
     test_model(testing_ham, testing_spam, MNB)
-    print "==== GAUSSIAN NAIVE BAYES ===="
+    print "GAUSSIAN NAIVE BAYES"
     GNB = GNB.fit(combined_training_data, combined_training_labels)
     test_model(training_ham, training_spam, GNB)
     test_model(testing_ham, testing_spam, GNB)
-    print "==== BERNOULLI NAIVE BAYES ===="
+    print "BERNOULLI NAIVE BAYES"
     BNB = BNB.fit(combined_training_data, combined_training_labels)
     test_model(training_ham, training_spam, BNB)
     test_model(testing_ham, testing_spam, BNB)
