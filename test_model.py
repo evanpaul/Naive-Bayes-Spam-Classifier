@@ -59,22 +59,12 @@ if __name__ == "__main__":
     ham_label = np.zeros(shape=len(ham_data))
     spam_label = np.ones(shape=len(spam_data))
 
+    # Mutual information feature filtering
     feature_path = "features_score.npy"
-    if os.path.isfile(feature_path):
-        scores = []
+    if False:#os.path.isfile(feature_path):
         print "Loading features' mutal information score from %s" % feature_path
 
-        scores = np.load(feature_path).tolist()
-        i = 0
-        for n in scores:
-            # Remove low scores
-            if n > 0:
-                scores.append(n)
-            else:
-                # Remove useless columns from
-                spam_data = np.delete(spam_data, [i], axis=1)
-                ham_data = np.delete(ham_data, [i], axis=1)
-            i+=1
+        MI = np.load(feature_path).tolist()
 
     else:
         print "Testing features' mutual information score..."
@@ -82,6 +72,17 @@ if __name__ == "__main__":
             np.concatenate((ham_label, spam_label)))
 
         np.save(feature_path, MI)
+
+    drop_col = 0
+    for n in MI:
+        if n == 0:
+            # Remove useless columns from data
+            spam_data = np.delete(spam_data, [drop_col], axis=1)
+            ham_data = np.delete(ham_data, [drop_col], axis=1)
+        drop_col += 1
+
+
+    print "Number of features after mutual information score filtering:", len(spam_data)
 
     # Partition into training and testing data
     training_spam = spam_data[:int(.8 * len(spam_data))]
