@@ -72,7 +72,11 @@ def remove_insignificant(master):
     for key in sorted(master_word_dict):
         total += master_word_dict[key]
     print "Length before reduction =", len(master_word_dict)
-    avg = total/len(master_word_dict)
+    if len(master_word_dict) > 0:
+        avg = total/len(master_word_dict)
+    else:
+        print "[ERROR] Empty master_word_dict"
+        return
     print "Average word occurrence = %f" % (avg)
     remove = []
     for word_key in sorted(master_word_dict):
@@ -115,7 +119,7 @@ if __name__ == "__main__":
 
     # Filtering
     print "Filtering results..."
-    # remove_stop_words(ham_counts, spam_counts, master_word_dict)
+    remove_stop_words(ham_counts, spam_counts, master_word_dict)
     remove_insignificant(master_word_dict)
     # remove_ambiguous(ham_counts, spam_counts, master_word_dict)
 
