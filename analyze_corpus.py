@@ -75,7 +75,7 @@ def remove_insignificant(master):
     if len(master_word_dict) > 0:
         avg = total/len(master_word_dict)
     else:
-        print "[ERROR] Empty master_word_dict"
+        print "[ERROR] Empty master_word_dict! Have you downloaded the corpuses?"
         return
     print "Average word occurrence = %f" % (avg)
     remove = []

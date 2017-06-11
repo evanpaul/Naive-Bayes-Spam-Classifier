@@ -71,8 +71,8 @@ if __name__ == "__main__":
         MI = mutual_info_classif(np.concatenate((ham_data, spam_data)),
             np.concatenate((ham_label, spam_label)))
 
-        np.save(feature_path, MI)
-
+        # np.save(feature_path, MI)
+    print "Removing columns with low mutual information scores"
     drop_col = 0
     for n in MI:
         if n == 0:
