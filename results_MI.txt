@@ -1,0 +1,45 @@
+MULTINOMIAL NAIVE BAYES
+==================================================
+Total predictions: 26972
+Correct classifications: 25978
+Overall spam detection rate: 96.314697 %
+False positives: 497 (1.842652 %)
+False negatives: 497 (1.842652 %)
+==================================================
+==================================================
+Total predictions: 6744
+Correct classifications: 6479
+Overall spam detection rate: 96.070581 %
+False positives: 136 (2.016607 %)
+False negatives: 129 (1.912811 %)
+==================================================
+GAUSSIAN NAIVE BAYES
+==================================================
+Total predictions: 26972
+Correct classifications: 24091
+Overall spam detection rate: 89.318553 %
+False positives: 2583 (9.576598 %)
+False negatives: 298 (1.104849 %)
+==================================================
+==================================================
+Total predictions: 6744
+Correct classifications: 5959
+Overall spam detection rate: 88.360024 %
+False positives: 666 (9.875445 %)
+False negatives: 119 (1.764531 %)
+==================================================
+BERNOULLI NAIVE BAYES
+==================================================
+Total predictions: 26972
+Correct classifications: 25691
+Overall spam detection rate: 95.250630 %
+False positives: 1164 (4.315587 %)
+False negatives: 117 (0.433783 %)
+==================================================
+==================================================
+Total predictions: 6744
+Correct classifications: 6397
+Overall spam detection rate: 94.854686 %
+False positives: 297 (4.403915 %)
+False negatives: 50 (0.741400 %)
+==================================================

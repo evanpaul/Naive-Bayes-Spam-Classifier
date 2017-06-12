@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.naive_bayes import MultinomialNB, GaussianNB, BernoulliNB
 from sklearn.feature_selection import mutual_info_classif, SelectKBest
+from sklearn.neighbors import KNeighborsClassifier
 import os.path
 
 def predict(data, model, spam_flag):
@@ -45,10 +46,12 @@ def test_model(ham, spam, model):
 
 
 if __name__ == "__main__":
+    # Instantiate models
     MNB = MultinomialNB()
     GNB = GaussianNB()
     BNB = BernoulliNB()
-
+    k = 5
+    KNN = KNeighborsClassifier(k)
 
     print "Loading CSVs..."
     # Pandas is super efficient at loading CSVs
@@ -95,7 +98,7 @@ if __name__ == "__main__":
 
     print "Selecting features based on mutual information score..."
     print "# features BEFORE filter =", len(training_ham[0])
-    sel = SelectKBest(score_func=mutual_info_classif, k=3000)
+    sel = SelectKBest(score_func=mutual_info_classif, k=2000)
     x = np.concatenate((training_ham, training_spam))
     y = np.concatenate((ham_label[:len(training_ham)], spam_label[:len(training_spam)]))
     sel = sel.fit(x, y)
@@ -135,3 +138,7 @@ if __name__ == "__main__":
     BNB = BNB.fit(combined_training_data, combined_training_labels)
     test_model(training_ham, training_spam, BNB)
     test_model(testing_ham, testing_spam, BNB)
+    print "K NEAREST NEIGHBORS (k=%d)" % k
+    KNN = KNN.fit(training_ham, training_spam)
+    test_model(training_ham, training_spam, KNN)
+    test_model(testing_ham, testing_spam, KNN)
