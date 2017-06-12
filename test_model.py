@@ -96,8 +96,9 @@ if __name__ == "__main__":
     testing_spam = spam_data[int(.8 * len(spam_data)):]
     testing_ham = ham_data[int(.8 * len(ham_data)):]
 
+    print "%d features before filter" %len(training_ham[0])
     print "Selecting features based on mutual information score..."
-    print "# features BEFORE filter =", len(training_ham[0])
+
     sel = SelectKBest(score_func=mutual_info_classif, k=2000)
     x = np.concatenate((training_ham, training_spam))
     y = np.concatenate((ham_label[:len(training_ham)], spam_label[:len(training_spam)]))
@@ -116,11 +117,9 @@ if __name__ == "__main__":
     testing_ham = np.delete(testing_ham, bad_features, axis=1)
 
 
-    print "# features AFTER  filter =", len(training_ham[0])
 
+    print "Using %d features for classification..." % len(training_ham(0))
 
-
-    print "Classifying data..."
     combined_training_data = np.concatenate((training_ham, training_spam))
     combined_training_labels = np.concatenate(
         (ham_label[:len(training_ham)], spam_label[:len(training_spam)]))
@@ -139,6 +138,13 @@ if __name__ == "__main__":
     test_model(training_ham, training_spam, BNB)
     test_model(testing_ham, testing_spam, BNB)
     print "K NEAREST NEIGHBORS (k=%d)" % k
-    KNN = KNN.fit(training_ham, training_spam)
-    test_model(training_ham, training_spam, KNN)
-    test_model(testing_ham, testing_spam, KNN)
+    try:
+        KNN = KNN.fit(combined_training_data, combined_training_labels)
+        test_model(training_ham, training_spam, KNN)
+        test_model(testing_ham, testing_spam, KNN)
+    except ValueError:
+        print "KNN failed!"
+        print "%d training instances with %d features" % (len(combined_training_data), len(combined_training_data[0]))
+        print "%d training labels" % len(combined_training_labels)
+        print combined_training_data.shape
+        print combined_training_labels.shape
