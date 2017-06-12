@@ -99,7 +99,8 @@ if __name__ == "__main__":
     print "%d features before filter" %len(training_ham[0])
     print "Selecting features based on mutual information score..."
 
-    sel = SelectKBest(score_func=mutual_info_classif, k=2000)
+    num_features = 2000
+    sel = SelectKBest(score_func=mutual_info_classif, k=num_features)
     x = np.concatenate((training_ham, training_spam))
     y = np.concatenate((ham_label[:len(training_ham)], spam_label[:len(training_spam)]))
     sel = sel.fit(x, y)
@@ -118,7 +119,7 @@ if __name__ == "__main__":
 
 
 
-    print "Using %d features for classification..." % len(training_ham(0))
+    print "Using %d features for classification..." % num_features
 
     combined_training_data = np.concatenate((training_ham, training_spam))
     combined_training_labels = np.concatenate(
@@ -148,3 +149,10 @@ if __name__ == "__main__":
         print "%d training labels" % len(combined_training_labels)
         print combined_training_data.shape
         print combined_training_labels.shape
+
+
+## TODO
+# INCLUDE TREC DATASET !!!!!!
+    # For enron, trec, and combined:
+        # Observe accuracies for Naive Bayes variations while varying number of features (might have to remove pruning in analyze_corpus.py)
+        # Observe KNN accuracy at different neighbor counts at ideal feature count found above
