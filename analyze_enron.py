@@ -7,7 +7,7 @@ import sys
 from collections import Counter
 from collections import OrderedDict
 from sklearn import metrics
-
+import project_utils as utils
 
 # Analyze enron ham or spam set
 def analyze_enron(glob_path, master_word_dict={}):
@@ -58,5 +58,5 @@ if __name__ == "__main__":
     utils.remove_insignificant(master_word_dict)
 
     print "Writing results to CSVs..."
-    utils.write_data("enron_spam_output", spam_file_dict, master_word_dict)
-    utils.write_data("enron_ham_output", ham_file_dict, master_word_dict)
+    utils.write_data_splits("enron_spam_output", spam_file_dict, master_word_dict)
+    utils.write_data_splits("enron_ham_output", ham_file_dict, master_word_dict)
