@@ -49,30 +49,31 @@ def test_model(ham, spam, model):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--score-features', dest="score", action='store_true')
+    parser.add_argument('--trec', dest="trec", action='store_true')
     args = parser.parse_args()
-    # Instantiate models
+
     DATA_path = "data/"
+
     MNB = MultinomialNB()
     GNB = GaussianNB()
     BNB = BernoulliNB()
-    k = 5
-    KNN = KNeighborsClassifier(k)
+
+    NUM_SPLITS = 10
 
 
     print "Loading data..."
     # Pandas is super efficient at loading CSVs
     spam_data = None
     ham_data = None
-    for i in range(11):
-        s_valid = False
-        h_valid = False
-        spam_target = DATA_path + 'trec_spam_output' + str(i) + ".csv"
-        ham_target = DATA_path + 'trec_ham_output' + str(i) + ".csv"
+    for i in range(NUM_SPLITS):
 
-        if os.path.isfile(spam_target):
-            s_valid = True
-        if os.path.isfile(ham_target):
-            h_valid = True
+        if args.trec:
+            spam_target = DATA_path + 'trec_spam_output' + str(i) + ".csv"
+            ham_target = DATA_path + 'trec_ham_output' + str(i) + ".csv"
+        else:
+            spam_target = DATA_path + 'enron_spam_output' + str(i) + ".csv"
+            ham_target = DATA_path + 'enron_ham_output' + str(i) + ".csv"
+
 
         if os.path.isfile(spam_target):
             spam_data_part = pd.read_csv(spam_target, sep=',', engine='c',
