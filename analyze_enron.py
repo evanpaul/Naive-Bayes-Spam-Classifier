@@ -38,7 +38,6 @@ def analyze_enron(glob_path, master_word_dict={}):
                             master_word_dict[i] += 1
                         else:
                             master_word_dict[i] = 1
-            # print txt_alphanum
             word_aggregator += txt_alphanum
             file_dict[filename] = Counter(txt_alphanum)
     word_counts = Counter(word_aggregator)
@@ -49,7 +48,7 @@ if __name__ == "__main__":
     VALID_WORDS = utils.load_dictionary()
 
     # Analyze Enron Corpus
-    print "Analyzing word frequency of corpus..."
+    print "Analyzing word frequency of Enron dataset..."
     ham_counts, ham_file_dict, master_word_dict = analyze_enron("enron/*/ham/*")
     spam_counts, spam_file_dict, master_word_dict = analyze_enron("enron/*/spam/*", master_word_dict=master_word_dict)
 
@@ -59,5 +58,5 @@ if __name__ == "__main__":
     utils.remove_insignificant(master_word_dict)
 
     print "Writing results to CSVs..."
-    utils.write_datapoints("spam_output.csv", spam_file_dict, master_word_dict)
-    utils.write_datapoints("ham_output.csv", ham_file_dict, master_word_dict)
+    utils.write_datapoints("enron_spam_output.csv", spam_file_dict, master_word_dict)
+    utils.write_datapoints("enron_ham_output.csv", ham_file_dict, master_word_dict)

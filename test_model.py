@@ -5,6 +5,7 @@ from sklearn.naive_bayes import MultinomialNB, GaussianNB, BernoulliNB
 from sklearn.feature_selection import mutual_info_classif, SelectKBest
 from sklearn.neighbors import KNeighborsClassifier
 import os.path
+import argparse
 
 def predict(data, model, spam_flag):
     tries = 0
@@ -46,49 +47,33 @@ def test_model(ham, spam, model):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--score-features', dest="score", action='store_true')
+    args = parser.parse_args()
     # Instantiate models
+    DATA_path = "data/"
     MNB = MultinomialNB()
     GNB = GaussianNB()
     BNB = BernoulliNB()
     k = 5
     KNN = KNeighborsClassifier(k)
 
-    print "Loading CSVs..."
+
+    print "Loading data..."
     # Pandas is super efficient at loading CSVs
-    spam_data = pd.read_csv('spam_output.csv', sep=',', engine='c',
+    spam_target = DATA_path + 'trec_spam_output.csv'
+    ham_target = DATA_path + 'trec_ham_output.csv'
+    spam_data = pd.read_csv(spam_target, sep=',', engine='c',
                             header=None, na_filter=False, dtype=np.int32, low_memory=False)
-    ham_data = pd.read_csv('ham_output.csv', sep=',', engine='c',
+    print "=>", spam_target
+    ham_data = pd.read_csv(ham_target, sep=',', engine='c',
                            header=None, na_filter=False, dtype=np.int32, low_memory=False)
+    print "=>", ham_target
     # Convert dataframe to numpy format
     spam_data = spam_data.values
     ham_data = ham_data.values
     ham_label = np.zeros(shape=len(ham_data))
     spam_label = np.ones(shape=len(spam_data))
-
-    # Mutual information feature filtering
-    # feature_path = "features_score.npy"
-    # if False:#os.path.isfile(feature_path):
-    #     print "Loading features' mutal information score from %s" % feature_path
-    #
-    #     MI = np.load(feature_path).tolist()
-    #
-    # else:
-
-        # MI = mutual_info_classif(np.concatenate((ham_data, spam_data)),
-        #     np.concatenate((ham_label, spam_label)))
-
-        # np.save(feature_path, MI)
-    # print "Removing columns with low mutual information scores"
-    # drop_col = 0
-    # for n in MI:
-    #     if n == 0:
-    #         # Remove useless columns from data
-    #         spam_data = np.delete(spam_data, [drop_col], axis=1)
-    #         ham_data = np.delete(ham_data, [drop_col], axis=1)
-    #     drop_col += 1
-
-
-    # print "Number of features after mutual information score filtering:", len(spam_data)
 
     # Partition into training and testing data
     training_spam = spam_data[:int(.8 * len(spam_data))]
@@ -96,26 +81,28 @@ if __name__ == "__main__":
     testing_spam = spam_data[int(.8 * len(spam_data)):]
     testing_ham = ham_data[int(.8 * len(ham_data)):]
 
-    print "%d features before filter" %len(training_ham[0])
-    print "Selecting features based on mutual information score..."
+    # Remove features based on MI score
+    if args.score:
+        print "%d features before filter" %len(training_ham[0])
+        print "Selecting features based on mutual information score..."
 
-    num_features = 2000
-    sel = SelectKBest(score_func=mutual_info_classif, k=num_features)
-    x = np.concatenate((training_ham, training_spam))
-    y = np.concatenate((ham_label[:len(training_ham)], spam_label[:len(training_spam)]))
-    sel = sel.fit(x, y)
+        num_features = 2000
+        sel = SelectKBest(score_func=mutual_info_classif, k=num_features)
+        x = np.concatenate((training_ham, training_spam))
+        y = np.concatenate((ham_label[:len(training_ham)], spam_label[:len(training_spam)]))
+        sel = sel.fit(x, y)
 
-    features = sel.get_support()
-    bad_features = []
-    for i in range(len(features)):
-        if not features[i]:
-            bad_features.append(i)
+        features = sel.get_support()
+        bad_features = []
+        for i in range(len(features)):
+            if not features[i]:
+                bad_features.append(i)
 
-    # Delete less useful features
-    training_spam = np.delete(training_spam, bad_features, axis=1)
-    training_ham = np.delete(training_ham, bad_features, axis=1)
-    testing_spam = np.delete(testing_spam, bad_features, axis=1)
-    testing_ham = np.delete(testing_ham, bad_features, axis=1)
+        # Delete less useful features
+        training_spam = np.delete(training_spam, bad_features, axis=1)
+        training_ham = np.delete(training_ham, bad_features, axis=1)
+        testing_spam = np.delete(testing_spam, bad_features, axis=1)
+        testing_ham = np.delete(testing_ham, bad_features, axis=1)
 
 
 
@@ -138,21 +125,20 @@ if __name__ == "__main__":
     BNB = BNB.fit(combined_training_data, combined_training_labels)
     test_model(training_ham, training_spam, BNB)
     test_model(testing_ham, testing_spam, BNB)
-    print "K NEAREST NEIGHBORS (k=%d)" % k
-    try:
-        KNN = KNN.fit(combined_training_data, combined_training_labels)
-        test_model(training_ham, training_spam, KNN)
-        test_model(testing_ham, testing_spam, KNN)
-    except ValueError:
-        print "KNN failed!"
-        print "%d training instances with %d features" % (len(combined_training_data), len(combined_training_data[0]))
-        print "%d training labels" % len(combined_training_labels)
-        print combined_training_data.shape
-        print combined_training_labels.shape
+    # print "K NEAREST NEIGHBORS (k=%d)" % k
+    # try:
+    #     KNN = KNN.fit(combined_training_data, combined_training_labels)
+    #     test_model(training_ham, training_spam, KNN)
+    #     test_model(testing_ham, testing_spam, KNN)
+    # except ValueError:
+    #     print "KNN failed!"
+    #     print "%d training instances with %d features" % (len(combined_training_data), len(combined_training_data[0]))
+    #     print "%d training labels" % len(combined_training_labels)
+    #     print combined_training_data.shape
+    #     print combined_training_labels.shape
 
 
-## TODO
-# INCLUDE TREC DATASET !!!!!!
-    # For enron, trec, and combined:
-        # Observe accuracies for Naive Bayes variations while varying number of features (might have to remove pruning in analyze_corpus.py)
-        # Observe KNN accuracy at different neighbor counts at ideal feature count found above
+#
+# For enron, trec, and combined:
+    # Observe accuracies for Naive Bayes variations while varying number of features (might have to remove pruning in analyze_corpus.py)
+    # Observe KNN accuracy at different neighbor counts at ideal feature count found above
