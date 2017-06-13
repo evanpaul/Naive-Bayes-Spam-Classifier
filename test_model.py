@@ -61,8 +61,8 @@ if __name__ == "__main__":
 
     print "Loading data..."
     # Pandas is super efficient at loading CSVs
-    spam_data = np.array([])
-    ham_data = np.array([])
+    spam_data = None
+    ham_data = None
     for i in range(11):
         spam_target = DATA_path + 'trec_spam_output' + str(i) + ".csv"
         ham_target = DATA_path + 'trec_ham_output' + str(i) + ".csv"
@@ -74,8 +74,12 @@ if __name__ == "__main__":
                                header=None, na_filter=False, dtype=np.int16, low_memory=False)
         print "=>", ham_target
 
-        spam_data = np.concatenate((spam_data, spam_data_part.values))
-        ham_data = np.concatenate((ham_data, ham_data_part.values))
+        if spam_data and ham_data:
+            spam_data = np.concatenate((spam_data, spam_data_part.values))
+            ham_data = np.concatenate((ham_data, ham_data_part.values))
+        else:
+            spam_data = spam_data_part.values
+            ham_data = ham_data_part.values
     # Convert dataframe to numpy format
     # spam_data = spam_data.values
     # ham_data = ham_data.values
