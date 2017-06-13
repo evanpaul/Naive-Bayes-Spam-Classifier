@@ -79,7 +79,7 @@ if __name__ == "__main__":
                                     header=None, na_filter=False, dtype=np.int16, low_memory=False)
             print "=>", spam_target
 
-            if spam_data is None
+            if spam_data is None:
                 spam_data = spam_data_part.values
             else:
                 spam_data = np.concatenate((spam_data, spam_data_part.values))
@@ -88,7 +88,7 @@ if __name__ == "__main__":
                                     header=None, na_filter=False, dtype=np.int16, low_memory=False)
             print "=>", ham_target
 
-            if ham_data is None
+            if ham_data is None:
                 ham_data = ham_data_part.values
             else:
                 ham_data = np.concatenate((ham_data, ham_data_part.values))
