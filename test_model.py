@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
 
 
-    print "Using %d features for classification..." % num_features
+    print "Using %d features for classification..." % len(training_spam[0])
 
     combined_training_data = np.concatenate((training_ham, training_spam))
     combined_training_labels = np.concatenate(
