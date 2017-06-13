@@ -75,11 +75,12 @@ if __name__ == "__main__":
         print "=>", ham_target
 
         if spam_data is None and ham_data is None:
-            spam_data = np.concatenate((spam_data, spam_data_part.values))
-            ham_data = np.concatenate((ham_data, ham_data_part.values))
-        else:
             spam_data = spam_data_part.values
             ham_data = ham_data_part.values
+        else:
+            spam_data = np.concatenate((spam_data, spam_data_part.values))
+            ham_data = np.concatenate((ham_data, ham_data_part.values))
+
     # Convert dataframe to numpy format
     # spam_data = spam_data.values
     # ham_data = ham_data.values
