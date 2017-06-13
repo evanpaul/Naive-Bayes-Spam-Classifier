@@ -49,7 +49,7 @@ def remove_insignificant(master_word_dict):
         sys.exit("Empty master_word_dict! Did you forget to downloaded the datasets?")
     remove = []
     for word_key in sorted(master_word_dict):
-        if master_word_dict[word_key] < avg/2:
+        if master_word_dict[word_key] < avg - 10:
             remove.append(word_key)
     for r in remove:
         del master_word_dict[r]
