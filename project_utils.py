@@ -92,7 +92,7 @@ def write_data(fname, file_dict, master_word_dict):
             wr.writerow(data_point)
     print "=> %s" % fname
 def write_data_splits(fname, file_dict, master_word_dict, splits=10):
-    print "Writing to %s with %d splits..."
+    print "Writing to %s with %d splits..." % (fname, splits)
     i = 0
     counter = 0
     split_point = len(file_dict)/splits
@@ -103,9 +103,9 @@ def write_data_splits(fname, file_dict, master_word_dict, splits=10):
             if fp:
                 fp.close()
             fp = open(CSV_path + fname + str(counter) + ".csv", "w")
-            counter += 1
             wr = csv.writer(fp)
             print "=> %s" % fname + str(counter)
+            counter += 1
         i += 1
         data_point = []
         for word in sorted(master_word_dict):

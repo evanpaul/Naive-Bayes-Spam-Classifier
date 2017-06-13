@@ -61,17 +61,27 @@ if __name__ == "__main__":
 
     print "Loading data..."
     # Pandas is super efficient at loading CSVs
-    spam_target = DATA_path + 'trec_spam_output.csv'
-    ham_target = DATA_path + 'trec_ham_output.csv'
-    spam_data = pd.read_csv(spam_target, sep=',', engine='c',
-                            header=None, na_filter=False, dtype=np.int32, low_memory=False)
-    print "=>", spam_target
-    ham_data = pd.read_csv(ham_target, sep=',', engine='c',
-                           header=None, na_filter=False, dtype=np.int32, low_memory=False)
-    print "=>", ham_target
+    spam_data = []
+    ham_data = []
+    for i in range(11):
+        spam_target = DATA_path + 'trec_spam_output' + str(i) + ".csv"
+        ham_target = DATA_path + 'trec_ham_output' + str(i) + ".csv"
+
+        spam_data_part = pd.read_csv(spam_target, sep=',', engine='c',
+                                header=None, na_filter=False, dtype=np.int16, low_memory=False)
+        print "=>", spam_target
+        ham_data_part = pd.read_csv(ham_target, sep=',', engine='c',
+                               header=None, na_filter=False, dtype=np.int16, low_memory=False)
+        print "=>", ham_target
+
+        spam_data += spam_data_part.values
+        ham_data += ham_data_part.values
+
+    spam_data = np.array(spam_data)
+    ham_data = np.array(ham_data)
     # Convert dataframe to numpy format
-    spam_data = spam_data.values
-    ham_data = ham_data.values
+    # spam_data = spam_data.values
+    # ham_data = ham_data.values
     ham_label = np.zeros(shape=len(ham_data))
     spam_label = np.ones(shape=len(spam_data))
 
