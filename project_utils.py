@@ -79,8 +79,8 @@ def remove_insignificant(master_word_dict):
 #         del master_word_dict[u]
 #     print "Length after removing ambiguous words =", len(master_word_dict)
 
-def write_datapoints(fname, file_dict, master_word_dict):
-    with open(CSV_path + fname, "wb") as fp:
+def write_data(fname, file_dict, master_word_dict):
+    with open(CSV_path + fname + ".csv", "w") as fp:
         wr = csv.writer(fp)
         data = []
         for f in file_dict:
@@ -93,3 +93,25 @@ def write_datapoints(fname, file_dict, master_word_dict):
             data.append(data_point)
             wr.writerow(data_point)
     print "=> %s" % fname
+def write_data_splits(fname, file_dict, master_word_dict, splits=10):
+    print "Writing to %s with %d splits..."
+    i = 0
+    counter = 0
+    split_point = len(file_dict)/splits
+    for f in file_dict:
+        # Close previous file, open next
+        if i % split_point == 0:
+            fp.close()
+            fp = open(CSV_path + fname + str(counter) + ".csv", "w")
+            counter += 1
+            wr = csv.writer(fp)
+            print "=> %s" % fname + str(counter)
+        i += 1
+        data_point = []
+        for word in sorted(master_word_dict):
+            if word in file_dict[f]:
+                data_point.append(file_dict[f][word])
+            else:
+                data_point.append(0)
+        data.append(data_point)
+        wr.writerow(data_point)

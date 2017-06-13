@@ -58,5 +58,5 @@ if __name__ == "__main__":
     utils.remove_insignificant(master_word_dict)
 
     print "Writing results to CSVs..."
-    utils.write_datapoints("enron_spam_output.csv", spam_file_dict, master_word_dict)
-    utils.write_datapoints("enron_ham_output.csv", ham_file_dict, master_word_dict)
+    utils.write_data("enron_spam_output", spam_file_dict, master_word_dict)
+    utils.write_data("enron_ham_output", ham_file_dict, master_word_dict)
