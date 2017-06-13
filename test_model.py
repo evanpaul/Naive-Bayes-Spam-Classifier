@@ -64,22 +64,36 @@ if __name__ == "__main__":
     spam_data = None
     ham_data = None
     for i in range(11):
+        s_valid = False
+        h_valid = False
         spam_target = DATA_path + 'trec_spam_output' + str(i) + ".csv"
         ham_target = DATA_path + 'trec_ham_output' + str(i) + ".csv"
 
-        spam_data_part = pd.read_csv(spam_target, sep=',', engine='c',
-                                header=None, na_filter=False, dtype=np.int16, low_memory=False)
-        print "=>", spam_target
-        ham_data_part = pd.read_csv(ham_target, sep=',', engine='c',
-                               header=None, na_filter=False, dtype=np.int16, low_memory=False)
-        print "=>", ham_target
+        if os.path.isfile(spam_target):
+            s_valid = True
+        if os.path.isfile(ham_target):
+            h_valid = True
 
-        if spam_data is None and ham_data is None:
-            spam_data = spam_data_part.values
-            ham_data = ham_data_part.values
-        else:
-            spam_data = np.concatenate((spam_data, spam_data_part.values))
-            ham_data = np.concatenate((ham_data, ham_data_part.values))
+        if os.path.isfile(spam_target):
+            spam_data_part = pd.read_csv(spam_target, sep=',', engine='c',
+                                    header=None, na_filter=False, dtype=np.int16, low_memory=False)
+            print "=>", spam_target
+
+            if spam_data is None
+                spam_data = spam_data_part.values
+            else:
+                spam_data = np.concatenate((spam_data, spam_data_part.values))
+        if os.path.isfile(ham_target):
+            ham_data_part = pd.read_csv(ham_target, sep=',', engine='c',
+                                    header=None, na_filter=False, dtype=np.int16, low_memory=False)
+            print "=>", ham_target
+
+            if ham_data is None
+                ham_data = ham_data_part.values
+            else:
+                ham_data = np.concatenate((ham_data, ham_data_part.values))
+
+
 
     # Convert dataframe to numpy format
     # spam_data = spam_data.values
