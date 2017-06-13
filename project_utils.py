@@ -82,7 +82,6 @@ def remove_insignificant(master_word_dict):
 def write_data(fname, file_dict, master_word_dict):
     with open(CSV_path + fname + ".csv", "w") as fp:
         wr = csv.writer(fp)
-        data = []
         for f in file_dict:
             data_point = []
             for word in sorted(master_word_dict):
@@ -90,7 +89,6 @@ def write_data(fname, file_dict, master_word_dict):
                     data_point.append(file_dict[f][word])
                 else:
                     data_point.append(0)
-            data.append(data_point)
             wr.writerow(data_point)
     print "=> %s" % fname
 def write_data_splits(fname, file_dict, master_word_dict, splits=10):
@@ -115,5 +113,4 @@ def write_data_splits(fname, file_dict, master_word_dict, splits=10):
                 data_point.append(file_dict[f][word])
             else:
                 data_point.append(0)
-        data.append(data_point)
         wr.writerow(data_point)
