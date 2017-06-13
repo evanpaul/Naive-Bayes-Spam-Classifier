@@ -186,7 +186,6 @@ if __name__ == "__main__":
     test_model(training_ham, training_spam, BNB)
     test_model(testing_ham, testing_spam, BNB)
 
-#
 # For enron, trec, and combined:
     # Observe accuracies for Naive Bayes variations while varying number of features (might have to remove pruning in analyze_corpus.py)
     # Observe KNN accuracy at different neighbor counts at ideal feature count

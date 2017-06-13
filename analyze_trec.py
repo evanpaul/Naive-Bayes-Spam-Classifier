@@ -10,12 +10,14 @@ from collections import OrderedDict
 import project_utils as utils
 
 # Get labels frmo index file
+
+
 def load_trec_labels():
     with open("trec07p/index.txt") as f:
         labels = f.read()
         labels = labels.split('\n')
 
-        del labels[-1:] # Remove final newline character
+        del labels[-1:]  # Remove final newline character
         label_list = ["" for x in range(len(labels) + 1)]
         label_list[0] = "PLACEHOLDER"
         for line in labels:
@@ -26,6 +28,8 @@ def load_trec_labels():
 
             label_list[int(num)] = label
     return label_list
+
+
 def analyze_trec():
     labels = load_trec_labels()
     master_word_dict = {}
@@ -37,7 +41,7 @@ def analyze_trec():
     for filename in glob.glob("trec07p/data/*"):
         with open(filename, "r") as f:
             f_split = filename.split('/')
-            f_num = int(f_split[len(f_split)-1][:-4])
+            f_num = int(f_split[len(f_split) - 1][:-4])
 
             target = ""
             txt = f.read()
@@ -48,7 +52,6 @@ def analyze_trec():
                         target += utils.strip_tags(str(part.get_payload()))
                     except UnicodeDecodeError:
                         pass
-
 
         result = re.sub('[^a-zA-Z ]', ' ', utils.strip_tags(target).lower())
         final = []
@@ -74,6 +77,7 @@ def analyze_trec():
     ham_counts = Counter(ham_word_aggregator)
 
     return spam_counts, ham_counts, spam_file_dict, ham_file_dict, master_word_dict
+
 
 if __name__ == "__main__":
     print "Analyzing word frequency of TREC dataset..."

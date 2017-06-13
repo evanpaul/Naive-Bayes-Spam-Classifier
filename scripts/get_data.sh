@@ -14,6 +14,6 @@ tar -xvf ../enron/enron4.tar.gz -C ../enron/
 tar -xvf ../enron/enron5.tar.gz -C ../enron/
 tar -xvf ../enron/enron6.tar.gz -C ../enron/
 
-# Something is up with this archive... have to SFTP the file over I guess
+# Something is up with this archive (not a valid tar)... have to manually SFTP the file over I guess
 # wget http://plg.uwaterloo.ca/cgi-bin/cgiwrap/gvcormac/trec07p.tgz -P ../
 # tar -xzvf trec07p.tgz

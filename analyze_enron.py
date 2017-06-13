@@ -19,7 +19,7 @@ def analyze_enron(glob_path, master_word_dict={}):
         with open(filename, "r") as f:
             # Preprocessing
             sub = f.readline()
-            sub = sub.split(" ")[1:] # Remove 'Subject:'
+            sub = sub.split(" ")[1:]  # Remove 'Subject:'
             sub = " ".join(sub)
             body = f.read()
             txt = sub + " " + body
@@ -28,7 +28,7 @@ def analyze_enron(glob_path, master_word_dict={}):
             txt = re.sub("[^a-zA-Z]", " ", txt)
             txt_alphanum = []
             for i in txt.split(" "):
-                if i.isalnum(): # Seems useless but removes more whitespace I guess
+                if i.isalnum():  # Seems useless but removes more whitespace I guess
                     i = i.lower()
                     # Only consider words present in English dictionary
                     if i in VALID_WORDS:
@@ -49,8 +49,10 @@ if __name__ == "__main__":
 
     # Analyze Enron Corpus
     print "Analyzing word frequency of Enron dataset..."
-    ham_counts, ham_file_dict, master_word_dict = analyze_enron("enron/*/ham/*")
-    spam_counts, spam_file_dict, master_word_dict = analyze_enron("enron/*/spam/*", master_word_dict=master_word_dict)
+    ham_counts, ham_file_dict, master_word_dict = analyze_enron(
+        "enron/*/ham/*")
+    spam_counts, spam_file_dict, master_word_dict = analyze_enron(
+        "enron/*/spam/*", master_word_dict=master_word_dict)
 
     # Filtering
     print "Filtering results..."
@@ -58,5 +60,7 @@ if __name__ == "__main__":
     utils.remove_insignificant(master_word_dict)
 
     print "Writing results to CSVs..."
-    utils.write_data_splits("enron_spam_output", spam_file_dict, master_word_dict)
-    utils.write_data_splits("enron_ham_output", ham_file_dict, master_word_dict)
+    utils.write_data_splits("enron_spam_output",
+                            spam_file_dict, master_word_dict)
+    utils.write_data_splits(
+        "enron_ham_output", ham_file_dict, master_word_dict)
