@@ -98,10 +98,12 @@ def write_data_splits(fname, file_dict, master_word_dict, splits=10):
     i = 0
     counter = 0
     split_point = len(file_dict)/splits
+    fp = None
     for f in file_dict:
         # Close previous file, open next
         if i % split_point == 0:
-            fp.close()
+            if fp:
+                fp.close()
             fp = open(CSV_path + fname + str(counter) + ".csv", "w")
             counter += 1
             wr = csv.writer(fp)
