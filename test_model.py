@@ -74,7 +74,7 @@ if __name__ == "__main__":
                                header=None, na_filter=False, dtype=np.int16, low_memory=False)
         print "=>", ham_target
 
-        if spam_data and ham_data:
+        if spam_data is None and ham_data is None:
             spam_data = np.concatenate((spam_data, spam_data_part.values))
             ham_data = np.concatenate((ham_data, ham_data_part.values))
         else:
