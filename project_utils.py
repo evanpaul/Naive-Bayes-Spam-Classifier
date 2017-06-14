@@ -49,12 +49,12 @@ def remove_insignificant(master_word_dict):
         sys.exit("Empty master_word_dict! Did you forget to downloaded the datasets?")
     remove = []
     for word_key in sorted(master_word_dict):
-        if master_word_dict[word_key] < avg:
+        if master_word_dict[word_key] < avg/4:
             remove.append(word_key)
     for r in remove:
         del master_word_dict[r]
 
-    print "Reduced %d features to %d features using threshold of %d" % (before, len(master_word_dict), avg)
+    print "Reduced %d features to %d features using threshold of count>%d" % (before, len(master_word_dict), avg/2)
 
 # Remove "non-decisive" entries
 # def remove_ambiguous(ham_counts, spam_counts, master_word_dict, threshold=0.58):
