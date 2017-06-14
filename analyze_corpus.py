@@ -79,39 +79,39 @@ def analyze_trec(master_word_dict={}):
 
     return spam_counts, ham_counts, spam_file_dict, ham_file_dict, master_word_dict
 
-    # Analyze enron ham or spam set
-    def analyze_enron(glob_path, master_word_dict={}):
-        src_count = 0
-        word_aggregator = []
-        file_dict = {}
-        for filename in glob.glob(glob_path):
-            src_count += 1
-            with open(filename, "r") as f:
-                # Preprocessing
-                sub = f.readline()
-                sub = sub.split(" ")[1:]  # Remove 'Subject:'
-                sub = " ".join(sub)
-                body = f.read()
-                txt = sub + " " + body
+# Analyze enron ham or spam set
+def analyze_enron(glob_path, master_word_dict={}):
+    src_count = 0
+    word_aggregator = []
+    file_dict = {}
+    for filename in glob.glob(glob_path):
+        src_count += 1
+        with open(filename, "r") as f:
+            # Preprocessing
+            sub = f.readline()
+            sub = sub.split(" ")[1:]  # Remove 'Subject:'
+            sub = " ".join(sub)
+            body = f.read()
+            txt = sub + " " + body
 
-                # Remove non-alpha
-                txt = re.sub("[^a-zA-Z]", " ", txt)
-                txt_alphanum = []
-                for i in txt.split(" "):
-                    if i.isalnum():  # Seems useless but removes more whitespace I guess
-                        i = i.lower()
-                        # Only consider words present in English dictionary
-                        if i in VALID_WORDS:
-                            txt_alphanum.append(i)
+            # Remove non-alpha
+            txt = re.sub("[^a-zA-Z]", " ", txt)
+            txt_alphanum = []
+            for i in txt.split(" "):
+                if i.isalnum():  # Seems useless but removes more whitespace I guess
+                    i = i.lower()
+                    # Only consider words present in English dictionary
+                    if i in VALID_WORDS:
+                        txt_alphanum.append(i)
 
-                            if i in master_word_dict:
-                                master_word_dict[i] += 1
-                            else:
-                                master_word_dict[i] = 1
-                word_aggregator += txt_alphanum
-                file_dict[filename] = Counter(txt_alphanum)
-        word_counts = Counter(word_aggregator)
-        return word_counts, file_dict, master_word_dict
+                        if i in master_word_dict:
+                            master_word_dict[i] += 1
+                        else:
+                            master_word_dict[i] = 1
+            word_aggregator += txt_alphanum
+            file_dict[filename] = Counter(txt_alphanum)
+    word_counts = Counter(word_aggregator)
+    return word_counts, file_dict, master_word_dict
 
 
 if __name__ == "__main__":
@@ -124,10 +124,10 @@ if __name__ == "__main__":
 
     VALID_WORDS = utils.load_dictionary()
 
-    if (args.enron and args.trec) or (not arg.enron and not args.trec):
+    if (args.enron and args.trec) or (not args.enron and not args.trec):
         # Analyze corpus
         print "Analyzing word frequency of Enron and TREC datasets..."
-        e_ham_word_counts, e_ham_file_dict, master_word_dict = analyze_enron(
+        e_ham_counts, e_ham_file_dict, master_word_dict = analyze_enron(
             "enron/*/ham/*")
         e_spam_counts, e_spam_file_dict, master_word_dict = analyze_enron(
             "enron/*/spam/*", master_word_dict=master_word_dict)
@@ -160,7 +160,7 @@ if __name__ == "__main__":
             "enron/*/ham/*")
         spam_counts, spam_file_dict, master_word_dict = analyze_enron(
             "enron/*/spam/*", master_word_dict=master_word_dict)
-            
+
         # Filtering
         print "Filtering results..."
         utils.remove_stop_words(ham_counts, spam_counts, master_word_dict)

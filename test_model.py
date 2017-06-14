@@ -105,21 +105,19 @@ if __name__ == "__main__":
     # Pandas is super efficient at loading CSVs
     if (args.trec and args.enron) or (not args.trec and not args.enron):
         # If neither dataset is specified, use both
-        # print "Loading TREC and Enron datasets..."
-        # trec_spam_target = DATA_path + 'trec_spam_output'
-        # trec_ham_target = DATA_path + 'trec_ham_output'
-        # trec_spam_data, trec_ham_data = load_data(
-        #     trec_spam_target, trec_ham_target)
-        #
-        # enron_spam_target = DATA_path + 'enron_spam_output'
-        # enron_ham_target = DATA_path + 'enron_ham_output'
-        # enron_spam_data, enron_ham_data = load_data(
-        #     enron_spam_target, enron_ham_target)
-        #
-        # spam_data = np.concatenate((trec_spam_data, enron_spam_data))
-        # ham_data = np.concatenate((trec_ham_data, enron_ham_data))
-        sys.exit("Specify exactly one dataset!")
-        # TODO Merge analyze source files to make features match!
+        print "Loading TREC and Enron datasets..."
+        trec_spam_target = DATA_path + 'trec_spam_output'
+        trec_ham_target = DATA_path + 'trec_ham_output'
+        trec_spam_data, trec_ham_data = load_data(
+            trec_spam_target, trec_ham_target)
+
+        enron_spam_target = DATA_path + 'enron_spam_output'
+        enron_ham_target = DATA_path + 'enron_ham_output'
+        enron_spam_data, enron_ham_data = load_data(
+            enron_spam_target, enron_ham_target)
+
+        spam_data = np.concatenate((trec_spam_data, enron_spam_data))
+        ham_data = np.concatenate((trec_ham_data, enron_ham_data))
     elif args.trec:
         print "Loading TREC dataset..."
         spam_target = DATA_path + 'trec_spam_output'

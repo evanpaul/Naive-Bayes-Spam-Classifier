@@ -1,2 +1,3 @@
-rm *.pyc
+#!/bin/bash
+# rm *.pyc
 rm data/*
