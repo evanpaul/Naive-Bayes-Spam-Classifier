@@ -4,9 +4,11 @@ import pandas as pd
 from sklearn.naive_bayes import MultinomialNB, GaussianNB, BernoulliNB
 from sklearn.feature_selection import mutual_info_classif, SelectKBest
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.externals import joblib
 import os.path
 import argparse
 import sys
+
 
 
 def predict(data, model, spam_flag):
@@ -92,6 +94,8 @@ if __name__ == "__main__":
                         help="use Enron dataset")
     parser.add_argument('-t', '--trec', dest="trec", action='store_true',
                         help="use TREC07 dataset")
+    parser.add_argument('-s', '--save', dest="save", action='store_true',
+                        help="save Multinomial Naive Bayes model to disk")
     args = parser.parse_args()
 
     DATA_path = "data/"
@@ -175,6 +179,17 @@ if __name__ == "__main__":
     MNB = MNB.fit(combined_training_data, combined_training_labels)
     test_model(training_ham, training_spam, MNB)
     test_model(testing_ham, testing_spam, MNB)
+
+    # Save MNB model to disk
+    if args.save:
+        if (args.trec and args.enron) or (not args.trec and not args.enron):
+            model_out = "mnb_combined.pkl"
+        elif args.trec:
+            model_out = "mnb_trec.pkl"
+        elif args.enron:
+            model_out = "mnb_enron.pkl"
+        joblib.dump(MB, model_out)
+
     print "GAUSSIAN NAIVE BAYES"
     GNB = GNB.fit(combined_training_data, combined_training_labels)
     test_model(training_ham, training_spam, GNB)

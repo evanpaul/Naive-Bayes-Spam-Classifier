@@ -56,29 +56,6 @@ def remove_insignificant(master_word_dict):
 
     print "Reduced %d features to %d features using threshold of count>%d" % (before, len(master_word_dict), avg/2)
 
-# Remove "non-decisive" entries
-# def remove_ambiguous(ham_counts, spam_counts, master_word_dict, threshold=0.58):
-#     useless = []
-#     for w in master_word_dict:
-#         # Check for key, 0 if not
-#         if w in spam_counts:
-#             spam_val = float(spam_counts[w])
-#         else:
-#             spam_val = 0
-#         if w in ham_counts:
-#             ham_val = float(ham_counts[w])
-#         else:
-#             ham_val = 0
-#
-#         spam_word_ratio = spam_val / master_word_dict[w]
-#         ham_word_ratio = ham_val / master_word_dict[w]
-#
-#         if (spam_word_ratio < threshold and spam_word_ratio > 1 - threshold) or (ham_word_ratio < threshold and ham_word_ratio > 1 - threshold):
-#             useless.append(w)
-#     for u in useless:
-#         del master_word_dict[u]
-#     print "Length after removing ambiguous words =", len(master_word_dict)
-
 def write_data(fname, file_dict, master_word_dict):
     with open(CSV_path + fname + ".csv", "w") as fp:
         wr = csv.writer(fp)
