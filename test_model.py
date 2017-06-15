@@ -10,16 +10,15 @@ import argparse
 import sys
 
 
-
 def predict(data, model, spam_flag):
+    '''Predict a label based on the inputted data points and model'''
     tries = 0
     correct = 0
     incorrect = 0
 
-    # Classify ham set
+    # Classify and compare to actual
     for i in range(len(data)):
         y = model.predict(data[i].reshape(1, -1))
-        # REVIEW Could definitely optimize this but I don't feel like it
         if spam_flag:
             correct_label = np.ones(shape=y.shape)
         else:
@@ -35,7 +34,7 @@ def predict(data, model, spam_flag):
 
 
 def test_model(ham, spam, model):
-    # Classify ham set
+    '''Run predictions on ham and spam set with given model'''
     ham_correct, false_positives, ham_tries = predict(ham, model, False)
     spam_correct, false_negatives, spam_tries = predict(spam, model, True)
 
@@ -51,6 +50,7 @@ def test_model(ham, spam, model):
 
 
 def load_data(spam_target, ham_target):
+    '''Load data partitions from CSVs on disk into memory using Pandas'''
     spam_data = None
     ham_data = None
 
@@ -65,6 +65,7 @@ def load_data(spam_target, ham_target):
         ham_path = ham_target + str(i) + ".csv"
 
         if os.path.isfile(spam_path):
+            # Pandas is used here due to its sheer efficiency
             spam_data_part = pd.read_csv(spam_path, sep=',', engine='c',
                                          header=None, na_filter=False, dtype=np.int16, low_memory=False)
             print "=>", spam_path
@@ -106,7 +107,7 @@ if __name__ == "__main__":
 
     NUM_SPLITS = 11
 
-    # Pandas is super efficient at loading CSVs
+    # Load data
     if (args.trec and args.enron) or (not args.trec and not args.enron):
         # If neither dataset is specified, use both
         print "Loading TREC and Enron datasets..."

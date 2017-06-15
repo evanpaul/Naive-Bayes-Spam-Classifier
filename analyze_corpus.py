@@ -11,10 +11,9 @@ from sklearn import metrics
 import project_utils as utils
 import argparse
 
-# Get labels frmo index file
-
 
 def load_trec_labels():
+    '''Load labels for the TREC dataset'''
     with open("trec07p/index.txt") as f:
         labels = f.read()
         labels = labels.split('\n')
@@ -33,6 +32,7 @@ def load_trec_labels():
 
 
 def analyze_trec(master_word_dict={}):
+    '''Parse and analyze the TREC dataset'''
     labels = load_trec_labels()
     spam_word_aggregator = []
     ham_word_aggregator = []
@@ -41,6 +41,7 @@ def analyze_trec(master_word_dict={}):
     VALID_WORDS = utils.load_dictionary()
     for filename in glob.glob("trec07p/data/*"):
         with open(filename, "r") as f:
+            # Get
             f_split = filename.split('/')
             f_num = int(f_split[len(f_split) - 1][:-4])
 
@@ -79,8 +80,12 @@ def analyze_trec(master_word_dict={}):
 
     return spam_counts, ham_counts, spam_file_dict, ham_file_dict, master_word_dict
 
-# Analyze enron ham or spam set
+
 def analyze_enron(glob_path, master_word_dict={}):
+    '''Parse and analyze Enron dataset
+
+    glob_path should be set as a glob to all ham or spam files
+    '''
     src_count = 0
     word_aggregator = []
     file_dict = {}
